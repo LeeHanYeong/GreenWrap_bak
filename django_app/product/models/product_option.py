@@ -5,8 +5,8 @@ from .product import Product
 from utils.models import Model, BasePrice
 
 __all__ = (
-    'ProductFeature',
-    'ProductFeaturePrice',
+    'ProductOption',
+    'ProductOptionPrice',
 )
 
 

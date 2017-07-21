@@ -1,6 +1,8 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 
+from utils.mixins import SortableMixin
 from utils.models import Model, BasePrice
 from .product_category import ProductCategorySmall
 
@@ -32,22 +34,25 @@ class Product(Model):
             )
         return self.title
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+    def clean(self):
         if self.use_price and not self.product_price_set.exists():
-            self.use_price = False
-            super().save(*args, **kwargs)
+            raise ValidationError('가격 사용 여부는 연결된 상품 가격 항목이 있을 때만 활성화 할 수 있습니다')
 
 
 class ProductPrice(BasePrice):
-    product = models.ForeignKey(Product, related_name='product_price_set')
+    product = models.ForeignKey(
+        Product,
+        verbose_name='상품 가격',
+        related_name='product_price_set'
+    )
 
     class Meta:
         verbose_name = '상품 가격'
         verbose_name_plural = '%s 목록' % verbose_name
+        ordering = ('-start_date',)
 
     def __str__(self):
-        return '상품({}) 가격정보: {}'.format(
+        return '상품({}) 가격: {}'.format(
             self.product.title,
             super().__str__()
         )

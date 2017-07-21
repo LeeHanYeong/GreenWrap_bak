@@ -38,10 +38,20 @@ class ProductCategoryMiddle(Model):
             self.title
         )
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not self.product_category_small_set.exists():
+            ProductCategorySmall.objects.create(
+                middle_category=self,
+            )
+
 
 class ProductCategorySmall(Model):
-    middle_category = models.ForeignKey(ProductCategoryMiddle, verbose_name='중분류')
-    title = models.CharField('소분류명', max_length=50)
+    middle_category = models.ForeignKey(
+        ProductCategoryMiddle,
+        verbose_name='중분류',
+        related_name='product_category_small_set')
+    title = models.CharField('소분류명', max_length=50, default='미분류')
 
     class Meta:
         verbose_name = '소분류'
@@ -49,7 +59,8 @@ class ProductCategorySmall(Model):
         order_with_respect_to = 'middle_category'
 
     def __str__(self):
-        return '소분류 ({} > {})'.format(
-            self.middle_category.__str__(),
+        return '소분류 ({} > {} > {})'.format(
+            self.middle_category.top_category.title,
+            self.middle_category.title,
             self.title
         )
