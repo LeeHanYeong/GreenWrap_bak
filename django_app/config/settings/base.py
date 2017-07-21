@@ -44,7 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'admin_reorder',
+    'adminsortable2',
+
     'member',
+    'product',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +59,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'admin_reorder.middleware.ModelAdminReorder',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -113,4 +119,30 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_IMPORTS = (
     'config.tasks',
     'utils.tasks',
+)
+
+# Admin reorder
+ADMIN_REORDER = (
+    {
+        'app': 'product',
+        'label': '상품 카테고리',
+        'models': (
+            'product.ProductCategoryTop',
+            'product.ProductCategoryMiddle',
+            'product.ProductCategorySmall',
+            # 'product.Product',
+            # 'product.ProductPrice',
+        )
+    },
+    {
+        'app': 'product',
+        'label': '상품 정보',
+        'models': (
+            # 'product.ProductCategoryTop',
+            # 'product.ProductCategoryMiddle',
+            # 'product.ProductCategorySmall',
+            'product.Product',
+            'product.ProductPrice',
+        )
+    },
 )
