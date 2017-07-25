@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
+from utils.mixins import SortableMixin
 from .product import Product
 from utils.models import Model, BasePrice
 
@@ -10,28 +11,46 @@ __all__ = (
 )
 
 
-class ProductFeature(Model):
+class ProductOption(SortableMixin, Model):
     """
     상품 특징
         하나의 상품이 특징에 따라 여러 상품으로 나누어지는 단위
         Product와 MTO으로 매칭
             ex) 6mm, 8mm...등
     """
-    product = models.ForeignKey(Product)
-    title = models.CharField(max_length=100)
+    product = models.ForeignKey(
+        Product,
+        verbose_name='상품',
+        related_name='option_set',
+    )
+    title = models.CharField('옵션명', max_length=100)
+
+    class Meta(SortableMixin.Meta):
+        verbose_name = '상품 옵션'
+        verbose_name_plural = '%s 목록' % verbose_name
 
     def __str__(self):
-        return '{product} Feature ({title})'.format(
+        return '{product} 옵션 (옵션명: {title})'.format(
             product=self.product.title,
             title=self.title,
         )
 
 
-class ProductFeaturePrice(BasePrice):
-    product_feature = models.ForeignKey(Product, related_name='product_feature_price_set')
+class ProductOptionPrice(BasePrice):
+    product_option = models.ForeignKey(
+        ProductOption,
+        verbose_name='상품 옵션',
+        related_name='price_set'
+    )
+
+    class Meta:
+        verbose_name = '상품 옵션 가격'
+        verbose_name_plural = '%s 목록' % verbose_name
 
     def __str__(self):
-        return '상품 특징({}) 가격정보: {}'.format(
-            self.product.title,
-            super().__str__()
+        return '{product} 옵션 ({option_title}) 가격 ({price:,d}원) [{start_date}~]'.format(
+            product=self.product_option.product.title,
+            option_title=self.product_option.title,
+            price=self.price,
+            start_date=self.start_date
         )
