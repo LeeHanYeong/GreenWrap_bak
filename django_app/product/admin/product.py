@@ -36,11 +36,11 @@ class ProductAdmin(SortableAdminMixin, admin.ModelAdmin):
                 'use_price',
             )
         }),
-        ('옵션목록', {
-            'fields': (
-                'admin_detail_options',
-            )
-        }),
+        # ('옵션목록', {
+        #     'fields': (
+        #         'admin_detail_options',
+        #     )
+        # }),
     )
     readonly_fields = (
         'admin_detail_options',
@@ -58,8 +58,8 @@ class ProductAdmin(SortableAdminMixin, admin.ModelAdmin):
         'category__middle_category__top_category',
     )
     inlines = (
-        ProductPriceInline,
         ProductOptionInline,
+        ProductPriceInline,
     )
 
     # def change_view(self, request, object_id, form_url='', extra_context=None):

@@ -17,7 +17,9 @@ class ProductOptionPriceInline(admin.TabularInline):
 
 class ProductOptionInline(SortableInlineAdminMixin, admin.TabularInline):
     model = ProductOption
-    extra = 1
+    extra = 0
+    show_change_link = True
+    template = 'admin/edit_inline/tabular_product_option.html'
 
 
 class ProductOptionAdmin(SortableAdminMixin, admin.ModelAdmin):

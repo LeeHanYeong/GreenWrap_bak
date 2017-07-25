@@ -24,16 +24,22 @@ class ProductOption(SortableMixin, Model):
         related_name='option_set',
     )
     title = models.CharField('옵션명', max_length=100)
+    quantity = models.PositiveSmallIntegerField('단위수량', default=1)
 
     class Meta(SortableMixin.Meta):
         verbose_name = '상품 옵션'
         verbose_name_plural = '%s 목록' % verbose_name
 
     def __str__(self):
-        return '{product} 옵션 (옵션명: {title})'.format(
+        return '{product} 옵션 (옵션명: {title}, 가격: {price:,d}원)'.format(
             product=self.product.title,
             title=self.title,
+            price=self.price
         )
+
+    @property
+    def price(self):
+        return self.price_set.exists() and self.price_set.first() or 0
 
 
 class ProductOptionPrice(BasePrice):

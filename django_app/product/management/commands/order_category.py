@@ -20,7 +20,7 @@ class Command(BaseCommand):
                 # self.stdout.write('  소분류 순서 정렬')
                 for small_index, small_category in enumerate(
                         middle_category.sub_category_set.iterator()):
-                    small_category._order = small_index * 10 + small_index
+                    small_category._order = top_index * 100 + middle_index * 10 + small_index
                     small_category.save()
                     self.stdout.write('   {}'.format(
                         small_category.title
