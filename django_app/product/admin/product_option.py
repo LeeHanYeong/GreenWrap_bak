@@ -12,7 +12,7 @@ __all__ = (
 
 class ProductOptionPriceInline(admin.TabularInline):
     model = ProductOptionPrice
-    extra = 1
+    extra = 0
 
 
 class ProductOptionInline(SortableInlineAdminMixin, admin.TabularInline):

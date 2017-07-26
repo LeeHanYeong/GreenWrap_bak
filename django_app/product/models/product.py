@@ -1,7 +1,9 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 
+from utils.exceptions import NotAllowedSelfPrice, PriceDoesNotExist, PriceError
 from utils.mixins import SortableMixin
 from utils.models import Model, BasePrice
 from .product_category import ProductCategorySmall
@@ -34,18 +36,43 @@ class Product(SortableMixin, Model):
         if self.use_price:
             return '{title} ({price:,d}원)'.format(
                 title=self.title,
-                price=0
+                price=self.price,
             )
         return self.title
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not self.price_set.exists():
+            self.price_set.create()
+
     def clean(self):
-        if self.use_price and not self.product_price_set.exists():
+        if self.use_price and not self.price_set.exists():
             raise ValidationError('가격 사용 여부는 연결된 상품 가격 항목이 있을 때만 활성화 할 수 있습니다')
+
+    @property
+    def price(self):
+        if not self.use_price:
+            raise NotAllowedSelfPrice(self)
+        elif not self.price_set.exists():
+            try:
+                self.save()
+            except:
+                raise PriceDoesNotExist(self)
+        try:
+            return self.price_set.first().price
+        except Exception as e:
+            raise PriceError(self, e)
 
     def admin_detail_options(self):
         ret = ''
         for option in self.option_set.iterator():
-            ret += '%s<br>' % option.title
+            ret += '<a href="{}">{} [{:,d}원]</a><br>'.format(
+                reverse(
+                    'admin:product_productoption_change',
+                    args=(option.pk,)),
+                option.title,
+                option.price
+            )
         return ret
 
     admin_detail_options.short_description = '옵션 목록'
@@ -59,10 +86,9 @@ class ProductPrice(BasePrice):
         related_name='price_set'
     )
 
-    class Meta:
+    class Meta(BasePrice.Meta):
         verbose_name = '상품 가격'
         verbose_name_plural = '%s 목록' % verbose_name
-        ordering = ['-start_date', ]
 
     def __str__(self):
         return '상품({}) 가격: {}'.format(

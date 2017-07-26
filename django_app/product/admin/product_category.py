@@ -14,6 +14,7 @@ class ProductCategoryTopAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 class ProductCategoryMiddleAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_filter = ('top_category',)
+    # list_display = ('admin_order', 'title')
 
 
 class ProductCategorySmallAdmin(SortableAdminMixin, admin.ModelAdmin):

@@ -154,7 +154,6 @@ ADMIN_REORDER = (
         'label': '상품 정보',
         'models': (
             'product.Product',
-            'product.ProductPrice',
             'product.ProductOption',
         )
     },

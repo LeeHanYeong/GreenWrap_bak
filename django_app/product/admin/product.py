@@ -51,6 +51,11 @@ class ProductAdmin(SortableAdminMixin, admin.ModelAdmin):
         'category',
         'admin_detail_options',
     )
+    list_editable = (
+        # 'title',
+        # 'use_price',
+        # 'category',
+    )
     list_filter = (
         'use_price',
         'category',

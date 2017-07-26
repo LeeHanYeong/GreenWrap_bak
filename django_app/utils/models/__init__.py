@@ -19,6 +19,7 @@ class BasePrice(Model):
 
     class Meta:
         abstract = True
+        ordering = ['-start_date']
 
     def __str__(self):
         return '{price:,d} [{start_date}~]'.format(

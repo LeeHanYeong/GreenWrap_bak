@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
+from utils.exceptions import PriceDoesNotExist, PriceError
 from utils.mixins import SortableMixin
 from .product import Product
 from utils.models import Model, BasePrice
@@ -37,9 +38,25 @@ class ProductOption(SortableMixin, Model):
             price=self.price
         )
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not self.price_set.exists():
+            self.price_set.create()
+
     @property
     def price(self):
-        return self.price_set.exists() and self.price_set.first() or 0
+        return self.get_price_instance().price
+
+    def get_price_instance(self):
+        if not self.price_set.exists():
+            try:
+                self.save()
+            except:
+                raise PriceDoesNotExist(self)
+        try:
+            return self.price_set.first()
+        except Exception as e:
+            raise PriceError(self, e)
 
 
 class ProductOptionPrice(BasePrice):
@@ -49,7 +66,7 @@ class ProductOptionPrice(BasePrice):
         related_name='price_set'
     )
 
-    class Meta:
+    class Meta(BasePrice.Meta):
         verbose_name = '상품 옵션 가격'
         verbose_name_plural = '%s 목록' % verbose_name
 
