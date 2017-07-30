@@ -32,6 +32,7 @@ class Product(SortableMixin, Model):
         verbose_name = '상품'
         verbose_name_plural = '%s 목록' % verbose_name
 
+    # Model methods
     def __str__(self):
         if self.use_price:
             return '{title} ({price:,d}원)'.format(
@@ -49,6 +50,7 @@ class Product(SortableMixin, Model):
         if self.use_price and not self.price_set.exists():
             raise ValidationError('가격 사용 여부는 연결된 상품 가격 항목이 있을 때만 활성화 할 수 있습니다')
 
+    # Properties
     @property
     def price(self):
         if not self.use_price:
@@ -63,6 +65,10 @@ class Product(SortableMixin, Model):
         except Exception as e:
             raise PriceError(self, e)
 
+    # Custom methods
+
+
+    # Admin functions
     def admin_detail_options(self):
         ret = ''
         for option in self.option_set.iterator():

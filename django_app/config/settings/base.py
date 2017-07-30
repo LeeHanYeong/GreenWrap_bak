@@ -47,9 +47,11 @@ INSTALLED_APPS = [
 
     'admin_reorder',
     'adminsortable2',
+    'rest_framework',
 
     'member',
     'product',
+    'purchase',
 ]
 
 MIDDLEWARE = [
@@ -155,6 +157,13 @@ ADMIN_REORDER = (
         'models': (
             'product.Product',
             'product.ProductOption',
+        )
+    },
+    {
+        'app': 'purchase',
+        'label': '주문정보',
+        'models': (
+            'puchase.Purchase',
         )
     },
 )
