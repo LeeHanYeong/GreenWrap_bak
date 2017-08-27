@@ -45,9 +45,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
+    'corsheaders',
     'admin_reorder',
     'adminsortable2',
     'rest_framework',
+    'django_filters',
 
     'member',
     'product',
@@ -55,6 +57,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -140,6 +143,11 @@ CELERY_IMPORTS = (
     'utils.tasks',
 )
 
+# CORS
+CORS_ORIGIN_WHITELIST = (
+    'localhost:3000',
+)
+
 # Admin reorder
 ADMIN_REORDER = (
     {
@@ -149,7 +157,7 @@ ADMIN_REORDER = (
             'product.ProductCategoryTop',
             'product.ProductCategoryMiddle',
             'product.ProductCategorySmall',
-        )
+        ),
     },
     {
         'app': 'product',
@@ -157,13 +165,20 @@ ADMIN_REORDER = (
         'models': (
             'product.Product',
             'product.ProductOption',
-        )
+        ),
+    },
+    {
+        'app': 'product',
+        'label': '상품 상세정보',
+        'models': (
+            'product.VinylInfo',
+        ),
     },
     {
         'app': 'purchase',
         'label': '주문정보',
         'models': (
             'puchase.Purchase',
-        )
+        ),
     },
 )

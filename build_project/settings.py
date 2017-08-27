@@ -5,7 +5,6 @@ from _utils import *
 class SettingsBuild:
     def __init__(self, rebuild=False):
         self.mode = 'debug'
-
         self.print_intro()
         self.select_mode()
         self.input_key(rebuild)

@@ -14,6 +14,7 @@ ProductCategoryTop (최상위 카테고리)
                 price_per_piece (1개당 가격)
 
 """
-from .product_category import *
 from .product import *
+from .product_category import *
+from .product_info import *
 from .product_option import *

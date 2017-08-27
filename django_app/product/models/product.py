@@ -23,10 +23,16 @@ class Product(SortableMixin, Model):
         verbose_name='카테고리',
         related_name='product_set',
     )
-    title = models.CharField('상품명', max_length=60)
+    title = models.CharField('상품명', max_length=60, blank=True)
+    size = models.CharField('사이즈', max_length=50, blank=True)
+    use_size_as_title = models.BooleanField('사이즈를 상품명으로 사용', default=False)
+    add_small_category_to_title = models.BooleanField('상품명 앞에 소분류명을 추가', default=False)
+    add_middle_category_to_title = models.BooleanField('상품명 앞에 중분류명을 추가', default=False)
+    add_size_to_title = models.BooleanField('상품명 뒤에 사이즈를 추가', default=False)
+
     short_description = models.CharField('짧은 설명', max_length=60, blank=True)
     full_description = models.TextField('상세 설명', blank=True)
-    use_price = models.BooleanField('가격 사용 여부', default=False)
+    use_price = models.BooleanField('자체 가격 사용 여부 (옵션 없음)', default=False)
 
     class Meta(SortableMixin.Meta):
         verbose_name = '상품'
@@ -34,12 +40,30 @@ class Product(SortableMixin, Model):
 
     # Model methods
     def __str__(self):
+        title = self.title
+        if self.use_size_as_title:
+            title = self.size
+        if self.add_small_category_to_title:
+            title = '{small_category} {title}'.format(
+                small_category=self.category.title,
+                title=title
+            )
+        if self.add_middle_category_to_title:
+            title = '{middle_category} {title}'.format(
+                middle_category=self.category.middle_category.title,
+                title=title
+            )
+        if self.add_size_to_title:
+            title = '{title} {size}'.format(
+                title=title,
+                size=self.size
+            )
         if self.use_price:
             return '{title} ({price:,d}원)'.format(
-                title=self.title,
+                title=title,
                 price=self.price,
             )
-        return self.title
+        return title
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -66,8 +90,6 @@ class Product(SortableMixin, Model):
             raise PriceError(self, e)
 
     # Custom methods
-
-
     # Admin functions
     def admin_detail_options(self):
         ret = ''

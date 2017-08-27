@@ -16,12 +16,13 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from . import views
+from . import apis
 
 admin.site.site_header = 'GreenWrap 관리자 페이지'
 admin.site.site_title = 'GreenWrap 관리'
 admin.site.index_title = '사이트 관리'
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^$', views.index),
+    url(r'^', include(views)),
+    url(r'^api/', include(apis)),
 ]

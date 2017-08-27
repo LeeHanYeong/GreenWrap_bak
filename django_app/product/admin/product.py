@@ -1,8 +1,8 @@
-from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 from django.contrib import admin
 
-from ..models import ProductPrice
+from adminsortable2.admin import SortableAdminMixin
 from ..admin.product_option import ProductOptionInline
+from ..models import ProductPrice
 
 __all__ = (
     'ProductAdmin',
@@ -30,12 +30,25 @@ class ProductAdmin(SortableAdminMixin, admin.ModelAdmin):
         }),
         ('기본정보', {
             'fields': (
-                'title',
-                'short_description',
-                'full_description',
                 'use_price',
             )
         }),
+        ('상품명', {
+            'fields': (
+                'title',
+                'size',
+                'use_size_as_title',
+                'add_small_category_to_title',
+                'add_middle_category_to_title',
+                'add_size_to_title',
+            )
+        }),
+        ('상품설명', {
+            'fields': (
+                'short_description',
+                'full_description',
+            )
+        })
         # ('옵션목록', {
         #     'fields': (
         #         'admin_detail_options',
@@ -46,7 +59,7 @@ class ProductAdmin(SortableAdminMixin, admin.ModelAdmin):
         'admin_detail_options',
     )
     list_display = (
-        'title',
+        '__str__',
         'use_price',
         'category',
         'admin_detail_options',
