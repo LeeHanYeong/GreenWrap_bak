@@ -57,6 +57,7 @@ class ProductAdmin(SortableAdminMixin, admin.ModelAdmin):
         # }),
     )
     readonly_fields = (
+        'product_type',
         'admin_detail_options',
     )
     list_display = (

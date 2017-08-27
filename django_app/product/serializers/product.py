@@ -9,6 +9,7 @@ __all__ = (
 
 
 class ProductListSerializer(serializers.ModelSerializer):
+    title = serializers.CharField(source='__str__')
     product_type_display = serializers.CharField(source='get_product_type_display')
 
     class Meta:
@@ -24,6 +25,9 @@ class ProductListSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
+        # use_price가 True일 경우 price정보 추가
+        if instance.use_price:
+            ret['price'] = instance.price
         # OTO로 연결된 ProductInfo정보를 rep에 update
         if instance.info and instance.info.serializer_class:
             ret.update(instance.info.serializer_class(instance.info).data)

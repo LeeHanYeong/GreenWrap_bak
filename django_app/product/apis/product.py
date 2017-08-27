@@ -8,8 +8,7 @@ __all__ = (
 )
 
 
-# class ProductViewSet(viewsets.ReadOnlyModelViewSet):
-class ProductViewSet(viewsets.ModelViewSet):
+class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Product.objects.all()
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('category', 'category__middle_category')
