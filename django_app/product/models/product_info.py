@@ -14,6 +14,10 @@ class ProductInfo(Model):
     class Meta:
         abstract = True
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.product.save()
+
 
 class VinylInfo(ProductInfo):
     thickness = models.DecimalField('두께', max_digits=6, decimal_places=3, blank=True, null=True)
@@ -29,3 +33,8 @@ class VinylInfo(ProductInfo):
             thickness=self.thickness,
             material=self.material
         )
+
+    @property
+    def serializer_class(self):
+        from ..serializers.product_info import VinylInfoSerializer
+        return VinylInfoSerializer

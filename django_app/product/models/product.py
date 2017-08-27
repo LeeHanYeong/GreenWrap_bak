@@ -1,7 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
-from django.utils import timezone
 
 from utils.exceptions import NotAllowedSelfPrice, PriceDoesNotExist, PriceError
 from utils.mixins import SortableMixin
@@ -18,6 +17,13 @@ class Product(SortableMixin, Model):
     """
     상품
     """
+    PRODUCT_TYPE_VINYL = 'vinyl'
+    CHOICES_PRODUCT_TYPES = (
+        (PRODUCT_TYPE_VINYL, '비닐'),
+    )
+
+    product_type = models.CharField(
+        '상품 타입', choices=CHOICES_PRODUCT_TYPES, max_length=15, blank=True)
     category = models.ForeignKey(
         ProductCategorySmall,
         verbose_name='카테고리',
@@ -67,12 +73,21 @@ class Product(SortableMixin, Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+        # OTO ProductInfo존재시 product_type설정
+        self.save_product_info(*args, **kwargs)
+        # 가격목록 없을경우 생성
         if not self.price_set.exists():
             self.price_set.create()
 
     def clean(self):
         if self.use_price and not self.price_set.exists():
             raise ValidationError('가격 사용 여부는 연결된 상품 가격 항목이 있을 때만 활성화 할 수 있습니다')
+
+    # Model methods helper
+    def save_product_info(self, *args, **kwargs):
+        if hasattr(self, 'vinylinfo'):
+            self.product_type = self.PRODUCT_TYPE_VINYL
+            super().save(*args, **kwargs)
 
     # Properties
     @property
@@ -88,6 +103,12 @@ class Product(SortableMixin, Model):
             return self.price_set.first().price
         except Exception as e:
             raise PriceError(self, e)
+
+    @property
+    def info(self):
+        if self.product_type == self.PRODUCT_TYPE_VINYL and hasattr(self, 'vinylinfo'):
+            return self.vinylinfo
+        return None
 
     # Custom methods
     # Admin functions

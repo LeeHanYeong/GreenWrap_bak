@@ -30,6 +30,7 @@ class ProductAdmin(SortableAdminMixin, admin.ModelAdmin):
         }),
         ('기본정보', {
             'fields': (
+                'product_type',
                 'use_price',
             )
         }),
