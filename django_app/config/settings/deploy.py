@@ -39,6 +39,3 @@ CELERY_RESULT_BACKEND = '{}:{}'.format(
     config_secret_deploy['django']['celery']['broker_url'],
     config_secret_deploy['django']['celery']['broker_port']
 )
-
-print('@@@@@@ DEBUG:', DEBUG)
-print('@@@@@@ ALLOWED_HOSTS:', ALLOWED_HOSTS)

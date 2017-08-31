@@ -20,12 +20,7 @@ DEBUG = True
 ALLOWED_HOSTS = config_secret_debug['django']['allowed_hosts']
 
 # Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+DATABASES = config_secret_debug['django']['databases']
 
 # Celery
 CELERY_BROKER_URL = '{}:{}'.format(
@@ -36,5 +31,3 @@ CELERY_RESULT_BACKEND = '{}:{}'.format(
     config_secret_debug['django']['celery']['broker_url'],
     config_secret_debug['django']['celery']['broker_port']
 )
-print('@@@@@@ DEBUG:', DEBUG)
-print('@@@@@@ ALLOWED_HOSTS:', ALLOWED_HOSTS)
