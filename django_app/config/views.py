@@ -7,4 +7,4 @@ def index(request):
     context = {
         'products': Product.objects.all()
     }
-    return render(request, 'index.html', context)
+    return render(request, 'index.jinja2', context)
