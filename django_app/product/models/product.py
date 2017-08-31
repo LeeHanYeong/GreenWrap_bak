@@ -3,6 +3,7 @@ from django.db import models
 from django.urls import reverse
 
 from utils.exceptions import NotAllowedSelfPrice, PriceDoesNotExist, PriceError
+from utils.fields import DefaultStaticImageField
 from utils.mixins import SortableMixin
 from utils.models import Model, BasePrice
 from .product_category import ProductCategorySmall
@@ -126,6 +127,19 @@ class Product(SortableMixin, Model):
 
     admin_detail_options.short_description = '옵션 목록'
     admin_detail_options.allow_tags = True
+
+
+class ProductImage(Model):
+    product = models.ForeignKey(Product)
+    img = DefaultStaticImageField(
+        upload_to='product',
+        blank=True
+    )
+
+    def __str__(self):
+        return '상품({}) 이미지'.format(
+            self.product.__str__()
+        )
 
 
 class ProductPrice(BasePrice):
