@@ -8,6 +8,7 @@ RUN         /root/.pyenv/versions/app/bin/pip install -r /srv/app/.requirements/
 # supervisor파일 복사
 COPY        .config/supervisor/local/supervisor-uwsgi.conf /etc/supervisor/conf.d/
 COPY        .config/supervisor/local/supervisor-nginx.conf /etc/supervisor/conf.d/
+COPY        .config/supervisor/local/supervisor-front.conf /etc/supervisor/conf.d/
 
 # nginx파일 복사
 COPY        .config/nginx/local/nginx.conf /etc/nginx/nginx.conf
@@ -20,5 +21,10 @@ WORKDIR     /srv/app/django_app
 RUN         /root/.pyenv/versions/app/bin/python manage.py migrate --noinput
 RUN         /root/.pyenv/versions/app/bin/python manage.py createsu
 RUN         /root/.pyenv/versions/app/bin/python manage.py collectstatic --noinput
+
+# front
+WORKDIR     /srv/app/front
+RUN         npm install
+
 CMD         supervisord -n
 EXPOSE      80 8000

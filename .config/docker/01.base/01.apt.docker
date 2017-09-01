@@ -14,6 +14,11 @@ RUN         apt-get -y install zsh
 RUN         wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
 RUN         chsh -s /usr/bin/zsh
 
+# npm
+RUN         apt-get -y install curl && \
+            curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+            apt-get -y install nodejs
+
 # pyenv settings
 RUN         echo 'export PATH="/root/.pyenv/bin:$PATH"' >> ~/.zshrc
 RUN         echo 'eval "$(pyenv init -)"' >> ~/.zshrc
