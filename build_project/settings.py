@@ -4,7 +4,7 @@ from _utils import *
 
 class SettingsBuild:
     def __init__(self, rebuild=False):
-        self.mode = 'debug'
+        self.mode = 'local'
         self.print_intro()
         self.select_mode()
         self.input_key(rebuild)
@@ -217,14 +217,14 @@ class SettingsBuild:
         print(intro_string)
 
     def select_mode(self):
-        print(' Select setting mode (default: 1.Debug)')
-        print('  1.Debug')
-        print('  2.Deploy')
+        print(' Select setting mode (default: 1.Local)')
+        print('  1.Local')
+        print('  2.Debug & Deploy')
         val = input('   > Select: ')
         if val == '2':
-            self.mode = 'deploy'
+            self.mode = 'local'
         else:
-            self.mode = 'debug'
+            self.mode = 'deploy'
 
     @staticmethod
     def dict_key_make(dic, key):

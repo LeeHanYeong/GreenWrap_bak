@@ -300,7 +300,16 @@ class DockerBuild:
                 content=open(os.path.join(option.path), 'rt').read(),
             )
             open(os.path.join(dockerfiles_dir, file_name), 'wt').write(cur_template)
+
+            build_command_template = 'docker build . -t {name} -f {dockerfile_name}'
+            build_command = build_command_template.format(
+                name=option.info,
+                dockerfile_name=os.path.join(dockerfiles_dir, file_name),
+            )
+            subprocess.run(build_command, shell=True)
+
             # is_production일 경우 마지막 loop의 파일을 프로젝트폴더/Dockerfile에 기록
+            # 또 마지막 이미지명을 tag로 기록
             if self.is_production and index == len(self.selected_options) - 1:
                 cur_template = template.format(
                     from_image=config_public['docker']['dockerHubImageName'],
@@ -309,10 +318,10 @@ class DockerBuild:
                 )
                 open(os.path.join(ROOT_DIR, 'Dockerfile'), 'wt').write(cur_template)
 
-            build_command_template = 'docker build . -t {name} -f {dockerfile_name}'
-            build_command = build_command_template.format(
-                name=option.info,
-                dockerfile_name=os.path.join(dockerfiles_dir, file_name),
-            )
-            subprocess.run(build_command, shell=True)
+                tag_command = 'docker tag {original} {remote}'.format(
+                    original=option.info,
+                    remote=config_public['docker']['dockerHubImageName']
+                )
+                print(tag_command)
+                subprocess.run(tag_command, shell=True)
 

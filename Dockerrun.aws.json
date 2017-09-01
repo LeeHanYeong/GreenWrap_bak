@@ -1,0 +1,16 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Authentication": {
+    "Bucket": "greenwrap",
+    "Key": "dockercfg.json"
+  },
+  "Image": {
+    "Name": "d.lhy.kr/greenwrap",
+    "Update": "true"
+  },
+ "Ports": [
+    {
+      "ContainerPort": "80"
+    }
+  ]
+}
