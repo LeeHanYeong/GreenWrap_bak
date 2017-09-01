@@ -146,6 +146,7 @@ CELERY_IMPORTS = (
 # CORS
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
+    'greenwrap.lhy.kr',
 )
 
 # Admin reorder
