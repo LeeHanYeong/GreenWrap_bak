@@ -15,7 +15,7 @@ class Model(DjangoModel):
 
 class BasePrice(Model):
     start_date = models.DateField('시작일자', default=timezone.now)
-    price = models.IntegerField('가격', default=0)
+    price = models.IntegerField('단위가격', default=0)
 
     class Meta:
         abstract = True

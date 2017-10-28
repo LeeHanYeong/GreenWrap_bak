@@ -17,5 +17,5 @@ before_script:
   - psql -c "CREATE DATABASE travisci;" -U postgres
 
 script:
-  - python django_app/manage.py migrate --noinput
-  - MODE='DEBUG' django_app/manage.py test
+  - python greenwrap/manage.py migrate --noinput
+  - MODE='DEBUG' greenwrap/manage.py test

@@ -1,4 +1,5 @@
-from rest_framework import viewsets, filters
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets
 
 from ..models import Product
 from ..serializers import ProductListSerializer, ProductDetailSerializer
@@ -10,7 +11,7 @@ __all__ = (
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Product.objects.all()
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend,)
     filter_fields = ('category', 'category__middle_category')
 
     def get_serializer_class(self):

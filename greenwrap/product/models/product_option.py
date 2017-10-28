@@ -1,10 +1,9 @@
 from django.db import models
-from django.utils import timezone
 
 from utils.exceptions import PriceDoesNotExist, PriceError
 from utils.mixins import SortableMixin
-from .product import Product
 from utils.models import Model, BasePrice
+from .product import Product
 
 __all__ = (
     'ProductOption',
@@ -32,10 +31,12 @@ class ProductOption(SortableMixin, Model):
         verbose_name_plural = '%s 목록' % verbose_name
 
     def __str__(self):
-        return '{product} 옵션 (옵션명: {title}, 가격: {price:,d}원)'.format(
-            product=self.product.title,
+        return '{product} 옵션 (옵션명: {title}{quantity}, 가격: {price:,d}원{quantity_price})'.format(
+            product=self.product.__str__(),
             title=self.title,
-            price=self.price
+            quantity=f', 단위수량: {self.quantity:,d}' if not self.is_single_item() else '',
+            price=self.price,
+            quantity_price=f', 단위가격: {self.quantity_price:,d}원' if not self.is_single_item() else '',
         )
 
     def save(self, *args, **kwargs):
@@ -44,8 +45,24 @@ class ProductOption(SortableMixin, Model):
             self.price_set.create()
 
     @property
-    def price(self):
+    def quantity_price(self):
+        """
+        자신의 ProductOptionPrice의 가장 최신 항목의 가격
+        옵션의 수량이 1일 경우, price와 같은 값을 가짐
+        :return:
+        """
         return self.get_price_instance().price
+
+    @property
+    def price(self):
+        """
+        자신의 ProductOptionPrice의 가장 최신 항목의 가격 * 자신의 단위수량을 가격으로 설정
+        :return: 
+        """
+        return self.quantity_price * self.quantity
+
+    def is_single_item(self):
+        return self.quantity == 1
 
     def get_price_instance(self):
         if not self.price_set.exists():

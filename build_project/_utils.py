@@ -2,7 +2,7 @@ import json
 import os
 
 ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
-BASE_DIR = os.path.join(ROOT_DIR, 'django_app')
+BASE_DIR = os.path.join(ROOT_DIR, 'greenwrap')
 CONF_DIR = os.path.join(ROOT_DIR, '.config')
 CONF_DOCKER_DIR = os.path.join(CONF_DIR, 'docker')
 CONF_PUBLIC_FILE = os.path.join(CONF_DIR, 'settings_public.json')
