@@ -4,13 +4,13 @@ services:
 python:
 - 3.6
 env:
-- MODE=DEBUG
+- DJANGO_SETTINGS_MODULE=config.settings.deploy
 before_install:
 - openssl aes-256-cbc -K $encrypted_50b936b9edbc_key -iv $encrypted_50b936b9edbc_iv
   -in secrets.tar.enc -out secrets.tar -d
 - tar xvf secrets.tar
 install:
-- pip install -r .requirements/debug.txt
+- pip install -r .requirements/deploy.txt
 before_script:
 - psql -c "CREATE DATABASE travisci;" -U postgres
 - cd greenwrap

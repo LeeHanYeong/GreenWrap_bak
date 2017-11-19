@@ -73,3 +73,21 @@ CELERY_RESULT_BACKEND = '{}:{}'.format(
     config_secret_deploy['django']['celery']['broker_url'],
     config_secret_deploy['django']['celery']['broker_port']
 )
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': [
+                'console',
+            ],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    },
+}
