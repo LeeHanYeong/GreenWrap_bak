@@ -9,6 +9,7 @@ static_root/
 .static_root/
 .media/
 .dockerfiles/
+secrets.tar
 
 # Created by https://www.gitignore.io/api/vim,macos,linux,django,python,pycharm
 

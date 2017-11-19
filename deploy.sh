@@ -1,2 +1,2 @@
 #!/bin/bash
-travis encrypt-file
+tar cvf secrets.tar .config_secret
