@@ -149,7 +149,11 @@ CORS_ORIGIN_WHITELIST = (
     'greenwrap.lhy.kr',
 )
 
-# Admin reorder
+# Admin
+DEFAULT_SUPERUSER_USERNAME = config_secret_common['django']['default_superuser']['username']
+DEFAULT_SUPERUSER_EMAIL = config_secret_common['django']['default_superuser']['email']
+DEFAULT_SUPERUSER_PASSWORD = config_secret_common['django']['default_superuser']['password']
+
 ADMIN_REORDER = (
     {
         'app': 'product',
